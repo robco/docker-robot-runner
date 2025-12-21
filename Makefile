@@ -1,4 +1,3 @@
-#!/bin/sh
 # MIT License
 #
 # Copyright (c) 2025 Róbert Malovec
@@ -21,16 +20,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -eu
+IMAGE ?= ghcr.io/malovec/robotframework-runner
+TAG ?= local
+SET ?= base
 
-# Lock dependencies locally (developer workflow).
-# Produces pinned + hashed requirements/*.txt from requirements/*.in.
-python -m pip install --no-cache-dir --upgrade pip
-python -m pip install --no-cache-dir pip-tools
+RUNTIME_TAG ?= 3.12-alpine3.21
+BUILD_TAG ?= 3.12-alpine3.21-dev
 
-for f in python robot all; do
-  pip-compile                                                                \
-    --generate-hashes                                                        \
-    --allow-unsafe                                                           \
-    -o "requirements/${f}.txt" "requirements/${f}.in"
-done
+lock:
+	./scripts/lock_requirements.sh
+
+build:
+	docker build                                                   \
+		--build-arg DHI_PYTHON_RUNTIME_TAG=$(RUNTIME_TAG)            \
+		--build-arg DHI_PYTHON_BUILD_TAG=$(BUILD_TAG)                \
+		--build-arg REQUIREMENTS_SET=$(SET)                          \
+		-t $(IMAGE):$(TAG) .
+
+smoke:
+	docker run --rm $(IMAGE):$(TAG) --version

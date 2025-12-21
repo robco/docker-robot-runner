@@ -1,0 +1,15 @@
+.git
+.github
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+dist
+build
+.idea
+.vscode
+robot-output
+output.xml
+log.html
+report.html
+.DS_Store

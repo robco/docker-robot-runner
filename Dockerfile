@@ -27,30 +27,35 @@ ARG DHI_PYTHON_BUILD_TAG=3.12-alpine3.21-dev
 FROM dhi.io/python:${DHI_PYTHON_BUILD_TAG} AS builder
 
 ARG REQUIREMENTS_SET=base
-ENV LANG=C.UTF-8                                                                             \
-    PYTHONDONTWRITEBYTECODE=1                                                                \
-    PYTHONUNBUFFERED=1                                                                       \
-    VENV_PATH=/opt/venv                                                                      \
+ENV LANG=C.UTF-8                                                                                   \
+    PYTHONDONTWRITEBYTECODE=1                                                                      \
+    PYTHONUNBUFFERED=1                                                                             \
+    VENV_PATH=/opt/venv                                                                            \
     PATH="/opt/venv/bin:$PATH"
 
-WORKDIR /robot
+WORKDIR /work
 
-RUN python -m venv ${VENV_PATH}
+# Create isolated venv for Robot + libraries
+RUN python -m venv "${VENV_PATH}"
 
-COPY requirements/ /robot/requirements/
+COPY requirements/ /work/requirements/
 COPY scripts/resolve_requirements.sh /usr/local/bin/resolve_requirements.sh
-RUN chmod +x /usr/local/bin/resolve_requirements.sh                                          \
- && /usr/local/bin/resolve_requirements.sh "${REQUIREMENTS_SET}" > /tmp/requirements.txt     \
- && pip install --no-cache-dir -U -r /tmp/requirements.txt                                   \
+
+# Install selected dependency set into the venv
+RUN chmod +x /usr/local/bin/resolve_requirements.sh                                                \
+ && /usr/local/bin/resolve_requirements.sh "${REQUIREMENTS_SET}" > /tmp/requirements.txt           \
+ && pip install --no-cache-dir -r /tmp/requirements.txt                                            \
  && pip check
 
 FROM dhi.io/python:${DHI_PYTHON_RUNTIME_TAG} AS runtime
 
-ENV PYTHONUNBUFFERED=1                                                                       \
-    VENV_PATH=/opt/venv                                                                      \
+ENV PYTHONUNBUFFERED=1                                                                             \
+    VENV_PATH=/opt/venv                                                                            \
     PATH="/opt/venv/bin:$PATH"
 
-WORKDIR /opt/robot
+# Robot writes output files by default; /tmp is typically writable for non-root users.
+WORKDIR /tmp
+
 COPY --from=builder /opt/venv /opt/venv
 
 ENTRYPOINT ["robot"]

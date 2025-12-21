@@ -18,16 +18,17 @@ jobs:
           registry: dhi.io
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build (base set)
+
+      - name: Build image (base set)
         uses: docker/build-push-action@v6
         with:
           context: .
           push: false
-          tags: robot-runner:ci
+          tags: robotframework-runner:ci
           build-args: |
             DHI_PYTHON_RUNTIME_TAG=3.12-alpine3.21
             DHI_PYTHON_BUILD_TAG=3.12-alpine3.21-dev
             REQUIREMENTS_SET=base
 
       - name: Smoke test
-        run: docker run --rm docker-runner:ci --version
+        run: docker run --rm robotframework-runner:ci --version
