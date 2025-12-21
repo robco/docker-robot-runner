@@ -35,7 +35,6 @@ jobs:
           build-args: |
             DHI_PYTHON_RUNTIME_TAG=3.12-alpine3.22
             DHI_PYTHON_BUILD_TAG=3.12-alpine3.22-dev
-            REQUIREMENTS_SET=all
 
       - name: Smoke test
         run: docker run --rm malovec/robot-runner-dev:latest -d results tests/test.robot
