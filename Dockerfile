@@ -26,25 +26,21 @@ ARG DHI_PYTHON_BUILD_TAG=3.12-alpine3.21-dev
 
 FROM dhi.io/python:${DHI_PYTHON_BUILD_TAG} AS builder
 
-ENV REQUIREMENTS_SET=all                                                                           \
-    LANG=C.UTF-8                                                                                   \
+ENV LANG=C.UTF-8                                                                                   \
     PYTHONDONTWRITEBYTECODE=1                                                                      \
     PYTHONUNBUFFERED=1                                                                             \
     VENV_PATH=/opt/venv                                                                            \
     PATH="/opt/venv/bin:$PATH"
 
-WORKDIR /work
+WORKDIR /robot
 
 # Create isolated venv for Robot + libraries
 RUN python -m venv "${VENV_PATH}"
 
-COPY requirements/ /work/requirements/
-COPY scripts/resolve_requirements.sh /usr/local/bin/resolve_requirements.sh
+COPY requirements/requirements.txt /robot/requirements.txt
 
 # Install selected dependency set into the venv
-RUN chmod +x /usr/local/bin/resolve_requirements.sh                                                \
- && /usr/local/bin/resolve_requirements.sh "${REQUIREMENTS_SET}" > /tmp/requirements.txt           \
- && pip install --no-cache-dir -r /tmp/requirements.txt                                            \
+RUN pip install --no-cache-dir -U -r /robot/requirements.txt                                       \
  && pip check
 
 FROM dhi.io/python:${DHI_PYTHON_RUNTIME_TAG} AS runtime
