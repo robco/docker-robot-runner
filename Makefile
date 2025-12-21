@@ -22,7 +22,7 @@
 
 IMAGE ?= ghcr.io/malovec/robotframework-runner
 TAG ?= local
-SET ?= base
+SET ?= all
 
 RUNTIME_TAG ?= 3.12-alpine3.21
 BUILD_TAG ?= 3.12-alpine3.21-dev
@@ -31,7 +31,7 @@ lock:
 	./scripts/lock_requirements.sh
 
 build:
-	docker build                                                   \
+	docker build                                                     \
 		--build-arg DHI_PYTHON_RUNTIME_TAG=$(RUNTIME_TAG)            \
 		--build-arg DHI_PYTHON_BUILD_TAG=$(BUILD_TAG)                \
 		--build-arg REQUIREMENTS_SET=$(SET)                          \
