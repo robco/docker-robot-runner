@@ -23,9 +23,14 @@
 
 set -eu
 
-# Uses pip-tools (kept as a dev-time concern; not required in the final runtime image).
-python -m pip install -U --no-cache-dir pip-tools
+# Lock dependencies locally (developer workflow).
+# Produces pinned + hashed requirements/*.txt from requirements/*.in.
+python -m pip install --no-cache-dir --upgrade pip
+python -m pip install --no-cache-dir pip-tools
 
-for f in python robot; do
-  pip-compile --generate-hashes --allow-unsafe -o "requirements/${f}.txt" "requirements/${f}.in"
+for f in python robot all; do
+  pip-compile                                                                \
+    --generate-hashes                                                        \
+    --allow-unsafe                                                           \
+    -o "requirements/${f}.txt" "requirements/${f}.in"
 done
