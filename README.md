@@ -1,4 +1,4 @@
-# Robot Framework on Docker Hardened Images (Python 3.12)
+# Robot Framework on Python Hardened Image
 
 A minimal Robot Framework container image based on **Docker Hardened Images** (DHI) from `dhi.io`, built with a multi-stage pattern:
 - builder stage uses a `-dev` image to create a venv and install Python deps
