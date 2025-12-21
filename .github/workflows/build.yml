@@ -38,4 +38,4 @@ jobs:
             REQUIREMENTS_SET=all
 
       - name: Smoke test
-        run: docker run --rm robot-runner:1.0 --version
+        run: docker run --rm malovec/robot-runner:1.0 --version
