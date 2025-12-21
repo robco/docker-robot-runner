@@ -41,14 +41,14 @@ jobs:
           set -eu
 
           IMAGE="ghcr.io/${GITHUB_REPOSITORY}"
+          VERSION="1.0"
 
-          for SET in base api web all; do
-            docker buildx build                                                       \
-              --push \
+          docker buildx build                                                         \
+              --push                                                                  \
+              --platform linux/amd64,linux/arm64                                      \
               --build-arg DHI_PYTHON_RUNTIME_TAG=3.12-alpine3.21                      \
               --build-arg DHI_PYTHON_BUILD_TAG=3.12-alpine3.21-dev                    \
-              --build-arg REQUIREMENTS_SET=${SET} \
-              -t "${IMAGE}:${{ steps.meta.outputs.version }}-${SET}"                  \
-              -t "${IMAGE}:latest-${SET}"                                             \
+              --build-arg REQUIREMENTS_SET=all                                        \
+              -t "${IMAGE}:${{ steps.meta.outputs.version }}-${VERSION}"              \
+              -t "${IMAGE}:${VERSION}"                                                \
               .
-          done
