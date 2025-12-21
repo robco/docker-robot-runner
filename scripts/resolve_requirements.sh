@@ -24,7 +24,7 @@
 set -eu
 
 SET="${1:-all}"
-FILE="/work/requirements/${SET}.txt"
+FILE="/work/requirements/${SET}.in"
 
 if [ ! -f "$FILE" ]; then
   echo "Unknown REQUIREMENTS_SET='${SET}'. Expected one of: python, robot, all." >&2
