@@ -31,4 +31,4 @@ jobs:
             REQUIREMENTS_SET=base
 
       - name: Smoke test
-        run: docker run --rm robotframework-runner:ci --version
+        run: docker run --rm ghcr.io/malovec/robotframework-runner:local --version
