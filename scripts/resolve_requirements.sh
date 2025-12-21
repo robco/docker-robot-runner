@@ -23,7 +23,7 @@
 
 set -eu
 
-SET="${1:-base}"
+SET="${1:-all}"
 FILE="/work/requirements/${SET}.txt"
 
 if [ ! -f "$FILE" ]; then
