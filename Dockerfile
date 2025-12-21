@@ -26,8 +26,8 @@ ARG DHI_PYTHON_BUILD_TAG=3.12-alpine3.21-dev
 
 FROM dhi.io/python:${DHI_PYTHON_BUILD_TAG} AS builder
 
-ARG REQUIREMENTS_SET=all
-ENV LANG=C.UTF-8                                                                                   \
+ENV REQUIREMENTS_SET=all                                                                           \
+    LANG=C.UTF-8                                                                                   \
     PYTHONDONTWRITEBYTECODE=1                                                                      \
     PYTHONUNBUFFERED=1                                                                             \
     VENV_PATH=/opt/venv                                                                            \
