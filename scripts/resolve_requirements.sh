@@ -24,10 +24,10 @@
 set -eu
 
 SET="${1:-base}"
-FILE="/robot/requirements/${SET}.txt"
+FILE="/work/requirements/${SET}.txt"
 
 if [ ! -f "$FILE" ]; then
-  echo "Unknown REQUIREMENTS_SET='$SET' (expected base/api/web/all)." >&2
+  echo "Unknown REQUIREMENTS_SET='${SET}'. Expected one of: python, robot, all." >&2
   exit 2
 fi
 
