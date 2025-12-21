@@ -1,0 +1,34 @@
+name: Build Image
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to dhi.io
+        uses: docker/login-action@v3
+        with:
+          registry: dhi.io
+          username: ${{ secrets.DHI_USERNAME }}
+          password: ${{ secrets.DHI_PASSWORD }}
+
+      - name: Build (base set)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: robot-runner:ci
+          build-args: |
+            DHI_PYTHON_RUNTIME_TAG=3.12-alpine3.21
+            DHI_PYTHON_BUILD_TAG=3.12-alpine3.21-dev
+            REQUIREMENTS_SET=base
+
+      - name: Smoke test
+        run: docker run --rm docker-runner:ci --version
