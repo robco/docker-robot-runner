@@ -47,12 +47,6 @@ RUN /usr/local/bin/install-apk-from-file /robot/requirements/apk.in
 COPY requirements/npm.in /robot/requirements/npm.in
 RUN npm install -g `cat /robot/requirements/npm.in`
 
-# Install JMeter
-RUN curl -fsSL "${JMETER_REPO}-${JMETER_VERSION}.tgz" -o /tmp/jmeter.tgz                          \
-    && tar -xzf /tmp/jmeter.tgz -C /opt                                                           \
-    && mv /opt/apache-jmeter-${JMETER_VERSION} ${JMETER_HOME}                                     \
-    && rm -f /tmp/jmeter.tgz
-
 # Install Python packages
 RUN python -m venv "${VENV_PATH}"
 COPY requirements/python.in /robot/requirements/python.in
