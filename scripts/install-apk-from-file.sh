@@ -62,6 +62,7 @@ if [ ! -f "${APK_FILE}" ]; then
   exit 0
 fi
 
+apk add bash
 enable_community_repo
 
 APK_PKGS="$(grep -vE '^[[:space:]]*(#|$)' "${APK_FILE}" | xargs || true)"
