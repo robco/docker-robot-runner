@@ -3,7 +3,7 @@
 
 A multi-platform Docker image for running Robot Framework tests seamlessly across **x64** and **Apple Silicon/ARM** architectures. Built on Alpine Linux for minimal footprint and maximum performance.
 
-## Features ✨
+## Features
 
 - **Multi-Architecture Support**: Pre-built images for both `linux/amd64` and `linux/arm64`
 - **Batteries Included**: Pre-installed with Robot Framework, browser automation tools, and testing utilities
@@ -11,7 +11,7 @@ A multi-platform Docker image for running Robot Framework tests seamlessly acros
 - **Production Ready**: Industry-standard security practices and optimized layers
 - **Flexible**: Easy to extend with your own test suites and dependencies
 
-## What's Included 🧰
+## What's Included
 
 ### Core Components
 - **Robot Framework** - Test automation framework
@@ -39,7 +39,7 @@ A multi-platform Docker image for running Robot Framework tests seamlessly acros
 └── entrypoint.sh                # Container entrypoint
 ```
 
-## Quick Start 🏃‍♂️
+## Quick Start
 
 ### Run Basic Tests
 ```bash
@@ -66,7 +66,7 @@ docker run --rm -v $(pwd):/robot malovec/robot-runner:latest -v VARIABLE:value y
 docker run --rm malovec/robot-runner:latest CMD="python -c \"print('Hello from Robot!')\""
 ```
 
-## Advanced Usage 🛠️
+## Advanced Usage
 
 ### Multi-stage Build Integration
 ```dockerfile
@@ -82,29 +82,13 @@ COPY --from=dev /opt/venv /opt/venv
 ### CI/CD Pipeline Integration
 The image works seamlessly with GitHub Actions, GitLab CI, Jenkins, and other CI/CD platforms. See our [GitHub Actions workflow](#github-actions) example below.
 
-## Architecture Support 🖥️
+## Architecture Support
 
 This image supports both modern architectures:
 - **linux/amd64**: Traditional 64-bit Intel/AMD processors
 - **linux/arm64**: Apple Silicon (M1/M2/M3) and ARM64 servers
 
-## Image Tags 🏷️
-
-| Tag | Description | Python Version | Alpine Version |
-|-----|-------------|----------------|----------------|
-| `latest` | Latest stable release | 3.12 | 3.22 |
-| `3.0` | Version 3.0 series | 3.12 | 3.22 |
-
-## Environment Variables 🔧
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `CMD` | `robot` | Override default command execution |
-| `VENV_PATH` | `/opt/venv` | Python virtual environment path |
-| `JMETER_HOME` | `/opt/jmeter` | JMeter installation directory |
-| `PYTHONUNBUFFERED` | `1` | Unbuffered Python output |
-
-## GitHub Actions 🤖
+## GitHub Actions
 
 This repository includes a ready-to-use GitHub Actions workflow for building and testing multi-architecture images:
 
