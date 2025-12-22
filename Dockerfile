@@ -43,9 +43,10 @@ COPY --chmod=0755 scripts/install-apk-from-file.sh /usr/local/bin/install-apk-fr
 COPY requirements/apk.in /robot/requirements/apk.in
 RUN /usr/local/bin/install-apk-from-file /robot/requirements/apk.in
 
-# Install NPM packages
+# Install NPM packages & Configure PlayWright + Chromium Browser
 COPY requirements/npm.in /robot/requirements/npm.in
-RUN npm install -g `cat /robot/requirements/npm.in`
+RUN npm install -g `cat /robot/requirements/npm.in`                                               \
+    && npx playwright install-deps chromium
 
 # Install JMeter
 RUN mkdir -p ${JMETER_HOME}                                                                       \
