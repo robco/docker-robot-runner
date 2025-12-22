@@ -14,10 +14,9 @@ A hardened, multi-platform Docker image for running Robot Framework test automat
 - **Hardened Security**: Built on Docker's official hardened Python base image
 - **Pre-installed Tools**:
   - Robot Framework 7.x
-  - Apache JMeter 5.6.3 for performance testing
   - Modern Python 3.12 environment
   - Alpine Linux-based for minimal footprint
-- **Flexible Execution**: Run Robot tests, JMeter scripts, or any custom command
+- **Flexible Execution**: Run Robot tests or any custom command
 - **Optimized Dependencies**: Pre-cached package installation for faster builds
 
 ## 🚀 Quick Start
@@ -26,14 +25,6 @@ A hardened, multi-platform Docker image for running Robot Framework test automat
 
 ```bash
 docker run --rm -v $(pwd):/robot malovec/robot-runner:latest tests/suite.robot
-```
-
-### Running JMeter Tests
-
-```bash
-docker run --rm -v $(pwd):/robot -e CMD=jmeter         \
-      malovec/robot-runner:latest                      \
-      -n -t Summary-Report.jmx -l Summary-Report.jtl
 ```
 
 ### Interactive Shell Access
@@ -54,7 +45,6 @@ docker run --rm -ti -e CMD=bash malovec/robot-runner:latest
 - All major Robot Framework ecosystem packages
 
 **System Tools:**
-- Apache JMeter 5.x
 - Node.js/npm packages for modern web testing
 - Alpine Linux system dependencies
 
@@ -72,30 +62,20 @@ docker run --rm                             \
 ### 2. Run Specific Robot Suite with Variables
 
 ```bash
-docker run --rm                             \
-  -v $(pwd):/robot                          \
-  malovec/robot-runner:latest               \
-  --variable BROWSER:chrome                 \
+docker run --rm                                                   \
+  -v $(pwd):/robot                                                \
+  malovec/robot-runner:latest                                     \
+  --variable BROWSER:chrome                                       \
   --suite smoke_tests tests/suite.robot
 ```
 
-### 3. Execute JMeter with Custom Properties
+### 3. Run Custom Python Scripts
 
 ```bash
-docker run --rm                                                   \
-  -v $(pwd):/robot                                                \
-  -e CMD=jmeter                                                   \
-  malovec/robot-runner:latest                                     \
-  -Jthreads=10 -Jduration=300 -n -t load_test.jmx -l results.jtl
-```
-
-### 4. Run Custom Python Scripts
-
-```bash
-docker run --rm                                   \
-  -v $(pwd):/robot                                \
-  -e CMD=python                                   \
-  malovec/robot-runner:latest                     \
+docker run --rm                                                  \
+  -v $(pwd):/robot                                               \
+  -e CMD=python                                                  \
+  malovec/robot-runner:latest                                    \
   my_script.py
 ```
 
@@ -105,20 +85,20 @@ docker run --rm                                   \
 
 ```bash
 # Mount current directory and specific output directory
-docker run --rm                                        \
-  -v $(pwd)/tests:/robot/tests                         \
-  -v $(pwd)/results:/robot/results                     \
-  malovec/robot-runner:latest                          \
+docker run --rm                                                  \
+  -v $(pwd)/tests:/robot/tests                                   \
+  -v $(pwd)/results:/robot/results                               \
+  malovec/robot-runner:latest                                    \
   --outputdir /robot/results /robot/tests
 ```
 
 ### Environment Variable Configuration
 
 ```bash
-docker run --rm                                        \
-  -v $(pwd):/robot                                     \
-  -e PYTHONPATH=/robot/lib                             \
-  -e ROBOT_OPTIONS="--loglevel DEBUG"                  \
+docker run --rm                                                  \
+  -v $(pwd):/robot                                               \
+  -e PYTHONPATH=/robot/lib                                       \
+  -e ROBOT_OPTIONS="--loglevel DEBUG"                            \
   malovec/robot-runner:latest
 ```
 
@@ -141,8 +121,8 @@ services:
 
 ```bash
 # Build for both x64 and ARM
-docker buildx build --platform linux/amd64,linux/arm64    \
-  -t malovec/robot-runner:latest                          \
+docker buildx build --platform linux/amd64,linux/arm64           \
+  -t malovec/robot-runner:latest                                 \
   --push .
 ```
 
@@ -177,14 +157,12 @@ requirements/
 
 This project is open source. Please check the respective licenses for included tools:
 - Robot Framework: Apache License 2.0
-- Apache JMeter: Apache License 2.0
 - Python: Python Software Foundation License
 
 ## 🔗 Links
 
 - **Docker Hub**: [malovec/robot-runner](https://hub.docker.com/r/malovec/robot-runner)
 - **Robot Framework**: [robotframework.org](https://robotframework.org/)
-- **Apache JMeter**: [jmeter.apache.org](https://jmeter.apache.org/)
 
 ---
 *Built with ❤️ for the Robot Framework community*
