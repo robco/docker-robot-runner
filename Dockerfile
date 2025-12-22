@@ -21,10 +21,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-ARG DHI_PYTHON_RUNTIME_TAG=3.12-alpine3.22
 ARG DHI_PYTHON_BUILD_TAG=3.12-alpine3.22-dev
 
-FROM dhi.io/python:${DHI_PYTHON_BUILD_TAG} AS builder
+FROM dhi.io/python:${DHI_PYTHON_BUILD_TAG}
 
 ENV LANG=en_US.UTF-8                                                                               \
     PYTHONDONTWRITEBYTECODE=1                                                                      \
@@ -34,25 +33,20 @@ ENV LANG=en_US.UTF-8                                                            
 
 WORKDIR /robot
 
-# Create isolated venv for Robot + libraries
+# Script (kept only in builder stage)
+COPY --chmod=0755 scripts/install-apk-from-file.sh /usr/local/bin/install-apk-from-file
+
+# Install System deps
+COPY requirements/apk.in /robot/requirements/apk.in
+RUN /usr/local/bin/install-apk-from-file /robot/requirements/apk.in
+
+# Install Python packages
 RUN python -m venv "${VENV_PATH}"
-
 COPY requirements/requirements.txt /robot/requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip                                                    \
+    pip install -U -r /robot/requirements.txt                                                     \
+    && pip check
 
-# Install selected dependency set into the venv
-RUN pip install --no-cache-dir -U -r /robot/requirements.txt                                       \
- && pip check
+COPY --chmod=0755 entrypoint.sh /usr/local/bin/entrypoint.sh
 
-FROM dhi.io/python:${DHI_PYTHON_RUNTIME_TAG} AS runtime
-
-ENV PYTHONUNBUFFERED=1                                                                             \
-    VENV_PATH=/opt/venv                                                                            \
-    PATH="/opt/venv/bin:$PATH"
-
-# Robot writes output files by default; /tmp is typically writable for non-root users.
-WORKDIR /tmp
-
-COPY --from=builder /opt/venv /opt/venv
-
-ENTRYPOINT ["robot"]
-CMD ["--version"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
