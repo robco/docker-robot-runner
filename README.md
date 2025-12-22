@@ -31,7 +31,9 @@ docker run --rm -v $(pwd):/robot malovec/robot-runner:latest tests/suite.robot
 ### Running JMeter Tests
 
 ```bash
-docker run --rm -v $(pwd):/robot -e CMD=jmeter malovec/robot-runner:latest -n -t Summary-Report.jmx -l Summary-Report.jtl
+docker run --rm -v $(pwd):/robot -e CMD=jmeter         \
+      malovec/robot-runner:latest                      \
+      -n -t Summary-Report.jmx -l Summary-Report.jtl
 ```
 
 ### Interactive Shell Access
