@@ -1,6 +1,7 @@
 pyodbc
 robotframework
 robotframework-datadriver
+robotframework-browser
 robotframework-seleniumlibrary
 robotframework-appiumlibrary
 robotframework-requests
