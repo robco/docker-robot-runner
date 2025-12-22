@@ -185,7 +185,4 @@ This project is open source. Please check the respective licenses for included t
 - **Apache JMeter**: [jmeter.apache.org](https://jmeter.apache.org/)
 
 ---
-
-**Note**: This image is optimized for CI/CD pipelines and automated testing environments. For development purposes, consider using the interactive shell mode for debugging and exploration.
----
 *Built with ❤️ for the Robot Framework community*
