@@ -21,10 +21,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-ARG DHI_PYTHON_RUNTIME_TAG=3.12-alpine3.22
 ARG DHI_PYTHON_BUILD_TAG=3.12-alpine3.22-dev
 
-FROM dhi.io/python:${DHI_PYTHON_BUILD_TAG} AS builder
+FROM dhi.io/python:${DHI_PYTHON_BUILD_TAG}
 
 ENV LANG=en_US.UTF-8                                                                               \
     PYTHONDONTWRITEBYTECODE=1                                                                      \
@@ -47,24 +46,6 @@ COPY requirements/requirements.txt /robot/requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip                                                    \
     pip install -U -r /robot/requirements.txt                                                     \
     && pip check
-
-
-FROM dhi.io/python:${DHI_PYTHON_RUNTIME_TAG} AS runtime
-
-ENV PYTHONUNBUFFERED=1                                                                             \
-    VENV_PATH=/opt/venv                                                                            \
-    PATH="/opt/venv/bin:$PATH"
-
-WORKDIR /tmp
-
-# Install runtime APK packages
-COPY --chmod=0755 scripts/install-apk-from-file.sh /usr/local/bin/install-apk-from-file
-COPY requirements/apk.in /tmp/apk.in
-RUN /usr/local/bin/install-apk-from-file /tmp/apk.in                                               \
-    && rm -f /tmp/apk.in                                                                           \
-    && rm -f /usr/local/bin/install-apk-from-file
-
-COPY --from=builder /opt/venv /opt/venv
 
 ENTRYPOINT ["robot"]
 CMD ["--version"]
