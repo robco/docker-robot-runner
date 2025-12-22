@@ -21,23 +21,50 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+#!/bin/sh
 set -eu
 
-APK_FILE="${1:-}"
+enable_community_repo() {
+  REPO_FILE="/etc/apk/repositories"
 
+  # Already enabled?
+  if grep -Eq '^[[:space:]]*[^#].*/community([[:space:]]|$)' "${REPO_FILE}"; then
+    return 0
+  fi
+
+  # Present but commented out -> uncomment
+  if grep -Eq '^[[:space:]]*#.*\/community([[:space:]]|$)' "${REPO_FILE}"; then
+    sed -i -E 's/^[[:space:]]*#([[:space:]]*.*\/community([[:space:]]|$))/\1/' "${REPO_FILE}"
+    return 0
+  fi
+
+  # Missing -> derive from first enabled main repo line
+  MAIN_LINE="$(grep -E '^[[:space:]]*[^#].*/main([[:space:]]|$)' "${REPO_FILE}" | head -n1 || true)"
+  if [ -n "${MAIN_LINE}" ]; then
+    echo "${MAIN_LINE%/main}/community" >> "${REPO_FILE}"
+    return 0
+  fi
+
+  # Last resort: add official CDN main+community based on installed Alpine major.minor
+  VER="$(cut -d. -f1-2 /etc/alpine-release)"
+  echo "https://dl-cdn.alpinelinux.org/alpine/v${VER}/main" >> "${REPO_FILE}"
+  echo "https://dl-cdn.alpinelinux.org/alpine/v${VER}/community" >> "${REPO_FILE}"
+}
+
+APK_FILE="${1:-}"
 if [ -z "${APK_FILE}" ]; then
   echo "Usage: install-apk-from-file.sh <path-to-apk.in>" >&2
   exit 2
 fi
 
-# Treat missing file as "nothing to install" (handy for optional builds).
+# Treat missing file as "nothing to install".
 if [ ! -f "${APK_FILE}" ]; then
   exit 0
 fi
 
-# Strip blank lines and comments, then collapse to a space-separated list.
-APK_PKGS="$(grep -vE '^[[:space:]]*(#|$)' "${APK_FILE}" | xargs || true)"
+enable_community_repo
 
+APK_PKGS="$(grep -vE '^[[:space:]]*(#|$)' "${APK_FILE}" | xargs || true)"
 if [ -n "${APK_PKGS}" ]; then
   apk add --no-cache ${APK_PKGS}
 fi
