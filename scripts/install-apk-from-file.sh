@@ -24,6 +24,13 @@
 #!/bin/sh
 set -eu
 
+install_default_pkgs() {
+  DEFAULT_PKGS="bash curl tar ca-certificates"
+
+  apk add --no-cache ${DEFAULT_PKGS}
+  update-ca-certificates
+}
+
 enable_community_repo() {
   REPO_FILE="/etc/apk/repositories"
 
@@ -62,7 +69,7 @@ if [ ! -f "${APK_FILE}" ]; then
   exit 0
 fi
 
-apk add bash
+install_default_pkgs
 enable_community_repo
 
 APK_PKGS="$(grep -vE '^[[:space:]]*(#|$)' "${APK_FILE}" | xargs || true)"
