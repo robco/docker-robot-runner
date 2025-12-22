@@ -48,8 +48,7 @@ COPY requirements/npm.in /robot/requirements/npm.in
 RUN npm install -g `cat /robot/requirements/npm.in`
 
 # Install JMeter
-RUN mkdir -p ${JMETER_HOME}                                                                       \
-    && curl -fsSL "${JMETER_REPO}-${JMETER_VERSION}.tgz" -o /tmp/jmeter.tgz                       \
+RUN curl -fsSL "${JMETER_REPO}-${JMETER_VERSION}.tgz" -o /tmp/jmeter.tgz                          \
     && tar -xzf /tmp/jmeter.tgz -C /opt                                                           \
     && mv /opt/apache-jmeter-${JMETER_VERSION} ${JMETER_HOME}                                     \
     && ls /opt/jmeter                                                                             \
