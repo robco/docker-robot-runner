@@ -45,7 +45,7 @@ RUN /usr/local/bin/install-apk-from-file /robot/requirements/apk.in
 
 # Install JMeter
 RUN mkdir -p ${JMETER_HOME}                                                                       \
-    && curl -fsSL "${JMETER_REPO-}${JMETER_VERSION}.tgz" -o /tmp/jmeter.tgz                       \
+    && curl -fsSL "${JMETER_REPO}-${JMETER_VERSION}.tgz" -o /tmp/jmeter.tgz                       \
     && tar -xzf /tmp/jmeter.tgz -C /opt                                                           \
     && ln -s "/opt/apache-jmeter-${JMETER_VERSION}" "${JMETER_HOME}"                              \
     && rm -f /tmp/jmeter.tgz
