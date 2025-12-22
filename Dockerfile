@@ -51,7 +51,6 @@ RUN npm install -g `cat /robot/requirements/npm.in`
 RUN curl -fsSL "${JMETER_REPO}-${JMETER_VERSION}.tgz" -o /tmp/jmeter.tgz                          \
     && tar -xzf /tmp/jmeter.tgz -C /opt                                                           \
     && mv /opt/apache-jmeter-${JMETER_VERSION} ${JMETER_HOME}                                     \
-    && ls /opt/jmeter                                                                             \
     && rm -f /tmp/jmeter.tgz
 
 # Install Python packages
