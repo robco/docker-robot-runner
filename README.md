@@ -53,9 +53,9 @@ docker run --rm -ti -e CMD=bash malovec/robot-runner:latest
 ### 1. Run Robot Tests with Output Directory
 
 ```bash
-docker run --rm                             \
-  -v $(pwd):/robot                          \
-  malovec/robot-runner:latest               \
+docker run --rm                                                   \
+  -v $(pwd):/robot                                                \
+  malovec/robot-runner:latest                                     \
   --outputdir results tests/
 ```
 
