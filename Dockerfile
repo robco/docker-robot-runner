@@ -56,9 +56,9 @@ RUN mkdir -p ${JMETER_HOME}                                                     
 
 # Install Python packages
 RUN python -m venv "${VENV_PATH}"
-COPY requirements/requirements.txt /robot/requirements.txt
+COPY requirements/python.in /robot/python.in
 RUN --mount=type=cache,target=/root/.cache/pip                                                    \
-    pip install -U -r /robot/requirements.txt                                                     \
+    pip install -U -r /robot/python.in                                                            \
     && pip check
 
 COPY --chmod=0755 entrypoint.sh /usr/local/bin/entrypoint.sh
