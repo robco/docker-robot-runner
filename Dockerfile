@@ -34,14 +34,20 @@ ENV LANG=en_US.UTF-8                                                            
 
 WORKDIR /robot
 
-# Create isolated venv for Robot + libraries
+# Script (kept only in builder stage)
+COPY --chmod=0755 scripts/install-apk-from-file.sh /usr/local/bin/install-apk-from-file
+
+# Install System deps
+COPY requirements/apk.in /robot/requirements/apk.in
+RUN /usr/local/bin/install-apk-from-file /robot/requirements/apk.in
+
+# Install Python packages
 RUN python -m venv "${VENV_PATH}"
-
 COPY requirements/requirements.txt /robot/requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip                                                    \
+    pip install -U -r /robot/requirements.txt                                                     \
+    && pip check
 
-# Install selected dependency set into the venv
-RUN pip install --no-cache-dir -U -r /robot/requirements.txt                                       \
- && pip check
 
 FROM dhi.io/python:${DHI_PYTHON_RUNTIME_TAG} AS runtime
 
@@ -49,8 +55,14 @@ ENV PYTHONUNBUFFERED=1                                                          
     VENV_PATH=/opt/venv                                                                            \
     PATH="/opt/venv/bin:$PATH"
 
-# Robot writes output files by default; /tmp is typically writable for non-root users.
 WORKDIR /tmp
+
+# Install runtime APK packages
+COPY --chmod=0755 scripts/install-apk-from-file.sh /usr/local/bin/install-apk-from-file
+COPY requirements/apk.in /tmp/apk.in
+RUN /usr/local/bin/install-apk-from-file /tmp/apk.in                                               \
+    && rm -f /tmp/apk.in                                                                           \
+    && rm -f /usr/local/bin/install-apk-from-file
 
 COPY --from=builder /opt/venv /opt/venv
 
