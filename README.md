@@ -13,7 +13,7 @@ A hardened, multi-platform Docker image for running Robot Framework test automat
 - **Multi-Architecture Support**: Runs seamlessly on x64, ARM, and Apple Silicon
 - **Hardened Security**: Built on Docker's official hardened Python base image
 - **Pre-installed Tools**:
-  - Robot Framework 6.1+
+  - Robot Framework 7.x
   - Apache JMeter 5.6.3 for performance testing
   - Modern Python 3.12 environment
   - Alpine Linux-based for minimal footprint
