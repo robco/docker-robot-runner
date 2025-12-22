@@ -29,7 +29,10 @@ ENV LANG=en_US.UTF-8                                                            
     PYTHONDONTWRITEBYTECODE=1                                                                      \
     PYTHONUNBUFFERED=1                                                                             \
     VENV_PATH=/opt/venv                                                                            \
-    PATH="/opt/venv/bin:$PATH"
+    PATH="/opt/venv/bin:/opt/jmeter/bin:$PATH"                                                     \
+    JMETER_VERSION=5.6.3                                                                           \
+    JMETER_REPO=https://dlcdn.apache.org//jmeter/binaries/apache-jmeter                            \
+    JMETER_HOME=/opt/jmeter
 
 WORKDIR /robot
 
@@ -39,6 +42,17 @@ COPY --chmod=0755 scripts/install-apk-from-file.sh /usr/local/bin/install-apk-fr
 # Install System deps
 COPY requirements/apk.in /robot/requirements/apk.in
 RUN /usr/local/bin/install-apk-from-file /robot/requirements/apk.in
+
+# Install NPM packages
+COPY requirements/npm.in /robot/requirements/npm.in
+RUN npm install -g `cat /robot/requirements/npm.in`
+
+# Install JMeter
+RUN mkdir -p ${JMETER_HOME}                                                                       \
+    && curl -fsSL "${JMETER_REPO}-${JMETER_VERSION}.tgz" -o /tmp/jmeter.tgz                       \
+    && tar -xzf /tmp/jmeter.tgz -C /opt                                                           \
+    && mv "/opt/apache-jmeter-${JMETER_VERSION}" "${JMETER_HOME}"                                 \
+    && rm -f /tmp/jmeter.tgz
 
 # Install Python packages
 RUN python -m venv "${VENV_PATH}"
