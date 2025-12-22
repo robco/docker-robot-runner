@@ -26,6 +26,19 @@ A multi-platform Docker image for running Robot Framework tests seamlessly acros
 - XML/JSON processing utilities
 - And much more!
 
+### Project structure
+```
+.
+├── Dockerfile                   # Multi-stage build configuration
+├── requirements/
+│   ├── apk.in                   # Alpine Linux packages
+│   ├── npm.in                   # Node.js packages
+│   └── python.in                # Python dependencies
+├── scripts/
+│   └── install-apk-from-file.sh # Package installation helper
+└── entrypoint.sh                # Container entrypoint
+```
+
 ## Quick Start 🏃‍♂️
 
 ### Run Basic Tests
