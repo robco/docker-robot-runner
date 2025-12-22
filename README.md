@@ -1,105 +1,191 @@
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/robco)
-# Robot Framework Docker Runner
+# Robot Framework Multi-Platform Docker Image
 
-A multi-platform Docker image for running Robot Framework tests seamlessly across **x64** and **Apple Silicon/ARM** architectures. Built on Alpine Linux for minimal footprint and maximum performance.
+[![Docker Pulls](https://img.shields.io/docker/pulls/malovec/robot-runner)](https://hub.docker.com/r/malovec/robot-runner)
+[![Multi-Platform Support](https://img.shields.io/badge/platform-x64%20%7C%20ARM%20%7C%20Apple%20Silicon-blue)](https://hub.docker.com/r/malovec/docker-robot-runner)
+[![Python Version](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
+[![Robot Framework](https://img.shields.io/badge/Robot%20Framework-7.x-red)](https://robotframework.org/)
 
-## Features
+A hardened, multi-platform Docker image for running Robot Framework test automation across x64 and ARM architectures (including Apple Silicon). This image provides a secure, portable environment for test execution with built-in support for performance testing tools.
 
-- **Multi-Architecture Support**: Pre-built images for both `linux/amd64` and `linux/arm64`
-- **Batteries Included**: Pre-installed with Robot Framework, browser automation tools, and testing utilities
-- **Lightweight**: Based on Alpine Linux for fast downloads and minimal resource usage
-- **Production Ready**: Industry-standard security practices and optimized layers
-- **Flexible**: Easy to extend with your own test suites and dependencies
+## 🌟 Features
 
-## What's Included
+- **Multi-Architecture Support**: Runs seamlessly on x64, ARM, and Apple Silicon
+- **Hardened Security**: Built on Docker's official hardened Python base image
+- **Pre-installed Tools**:
+  - Robot Framework 6.1+
+  - Apache JMeter 5.6.3 for performance testing
+  - Modern Python 3.12 environment
+  - Alpine Linux-based for minimal footprint
+- **Flexible Execution**: Run Robot tests, JMeter scripts, or any custom command
+- **Optimized Dependencies**: Pre-cached package installation for faster builds
 
-### Core Components
-- **Robot Framework** - Test automation framework
-- **Python 3.12** - Modern Python version with full Robot Framework ecosystem
-- **JMeter 5.6.3** - Performance testing integration
-- **Node.js/NPM** - JavaScript testing capabilities
+## 🚀 Quick Start
 
-### Pre-installed Dependencies
-- Browser automation libraries
-- API testing tools
-- Database connectors
-- XML/JSON processing utilities
-- And much more!
+### Basic Robot Framework Execution
 
-### Project structure
-```
-.
-├── Dockerfile                   # Multi-stage build configuration
-├── requirements/
-│   ├── apk.in                   # Alpine Linux packages
-│   ├── npm.in                   # Node.js packages
-│   └── python.in                # Python dependencies
-├── scripts/
-│   └── install-apk-from-file.sh # Package installation helper
-└── entrypoint.sh                # Container entrypoint
-```
-
-## Quick Start
-
-### Run Basic Tests
 ```bash
-docker run --rm -v $(pwd)/tests:/tests malovec/robot-runner:latest -d results /tests/test.robot
+docker run --rm -v $(pwd):/robot malovec/robot-runner:latest tests/suite.robot
 ```
 
-### Use as Base Image
-```dockerfile
-FROM malovec/robot-runner:latest
+### Running JMeter Tests
 
-COPY your-tests /robot/tests
-COPY requirements /robot/requirements
-
-# Add additional dependencies if needed
-RUN pip install -r /robot/requirements/python.in
-```
-
-### Custom Command Execution
 ```bash
-# Run specific Robot Framework command
-docker run --rm -v $(pwd):/robot malovec/robot-runner:latest -v VARIABLE:value your_test.robot
-
-# Execute custom commands
-docker run --rm malovec/robot-runner:latest CMD="python -c \"print('Hello from Robot!')\""
+docker run --rm -v $(pwd):/robot -e CMD=jmeter malovec/robot-runner:latest -n -t Summary-Report.jmx -l Summary-Report.jtl
 ```
 
-## Advanced Usage
+### Interactive Shell Access
 
-### Multi-stage Build Integration
-```dockerfile
-# Development stage
-FROM malovec/robot-runner:latest as dev
-RUN pip install additional-dev-packages
-
-# Production stage  
-FROM malovec/robot-runner:latest
-COPY --from=dev /opt/venv /opt/venv
+```bash
+docker run --rm -ti -e CMD=bash malovec/robot-runner:latest
 ```
 
-### CI/CD Pipeline Integration
-The image works seamlessly with GitHub Actions, GitLab CI, Jenkins, and other CI/CD platforms. See our [GitHub Actions workflow](#github-actions) example below.
+## 📦 Image Contents
 
-## Architecture Support
+### Pre-installed Packages
 
-This image supports both modern architectures:
-- **linux/amd64**: Traditional 64-bit Intel/AMD processors
-- **linux/arm64**: Apple Silicon (M1/M2/M3) and ARM64 servers
+**Python Libraries:**
+- Robot Framework 7.x
+- Browser and SeleniumLibrary for web testing
+- Appium Library for mobile testing
+- Requests library for API testing
+- All major Robot Framework ecosystem packages
 
-## GitHub Actions
+**System Tools:**
+- Apache JMeter 5.x
+- Node.js/npm packages for modern web testing
+- Alpine Linux system dependencies
 
-This repository includes a ready-to-use GitHub Actions workflow for building and testing multi-architecture images:
+## 🛠️ Usage Examples
+
+### 1. Run Robot Tests with Output Directory
+
+```bash
+docker run --rm                             \
+  -v $(pwd):/robot                          \
+  malovec/robot-runner:latest               \
+  --outputdir results tests/
+```
+
+### 2. Run Specific Robot Suite with Variables
+
+```bash
+docker run --rm                             \
+  -v $(pwd):/robot                          \
+  malovec/robot-runner:latest               \
+  --variable BROWSER:chrome                 \
+  --suite smoke_tests tests/suite.robot
+```
+
+### 3. Execute JMeter with Custom Properties
+
+```bash
+docker run --rm                                                   \
+  -v $(pwd):/robot                                                \
+  -e CMD=jmeter                                                   \
+  malovec/robot-runner:latest                                     \
+  -Jthreads=10 -Jduration=300 -n -t load_test.jmx -l results.jtl
+```
+
+### 4. Run Custom Python Scripts
+
+```bash
+docker run --rm                                   \
+  -v $(pwd):/robot                                \
+  -e CMD=python                                   \
+  malovec/robot-runner:latest                     \
+  my_script.py
+```
+
+## 🔧 Advanced Configuration
+
+### Volume Mounts for Data Persistence
+
+```bash
+# Mount current directory and specific output directory
+docker run --rm                                        \
+  -v $(pwd)/tests:/robot/tests                         \
+  -v $(pwd)/results:/robot/results                     \
+  malovec/robot-runner:latest                          \
+  --outputdir /robot/results /robot/tests
+```
+
+### Environment Variable Configuration
+
+```bash
+docker run --rm                                        \
+  -v $(pwd):/robot                                     \
+  -e PYTHONPATH=/robot/lib                             \
+  -e ROBOT_OPTIONS="--loglevel DEBUG"                  \
+  malovec/robot-runner:latest
+```
+
+### Docker Compose Integration
 
 ```yaml
-# See publish.yml for complete workflow
-- name: Build multi-arch image
-  uses: docker/build-push-action@v6
-  with:
-    platforms: linux/amd64,linux/arm64
-    tags: malovec/robot-runner:latest,malovec/robot-runner:3.0
+version: '3.8'
+services:
+  robot-tests:
+    image: malovec/robot-runner:latest
+    volumes:
+      - ./tests:/robot/tests
+      - ./results:/robot/results
+    command: --outputdir /robot/results /robot/tests/smoke.robot
 ```
 
+## 🏗️ Building from Source
+
+### Build for Multiple Architectures
+
+```bash
+# Build for both x64 and ARM
+docker buildx build --platform linux/amd64,linux/arm64    \
+  -t malovec/robot-runner:latest                          \
+  --push .
+```
+
+### Custom Python Version
+
+```bash
+# Build with specific Python version
+docker build --build-arg DHI_PYTHON_BUILD_TAG=3.11-alpine3.22-dev \
+  -t my-robot-runner:custom .
+```
+
+## 🔒 Security Features
+
+- Built on Docker's hardened Python base image
+- Non-root user execution support
+- Minimal Alpine Linux base for reduced attack surface
+- Regular security updates from upstream bases
+- Python bytecode writing disabled (`PYTHONDONTWRITEBYTECODE=1`)
+
+## 📋 Requirements File Structure
+
+The image uses a structured approach for dependencies:
+
+```
+requirements/
+├── apk.in      # Alpine Linux packages
+├── npm.in      # Node.js packages  
+└── python.in   # Python packages
+```
+
+## 📄 License
+
+This project is open source. Please check the respective licenses for included tools:
+- Robot Framework: Apache License 2.0
+- Apache JMeter: Apache License 2.0
+- Python: Python Software Foundation License
+
+## 🔗 Links
+
+- **Docker Hub**: [malovec/robot-runner](https://hub.docker.com/r/malovec/robot-runner)
+- **Robot Framework**: [robotframework.org](https://robotframework.org/)
+- **Apache JMeter**: [jmeter.apache.org](https://jmeter.apache.org/)
+
+---
+
+**Note**: This image is optimized for CI/CD pipelines and automated testing environments. For development purposes, consider using the interactive shell mode for debugging and exploration.
 ---
 *Built with ❤️ for the Robot Framework community*
