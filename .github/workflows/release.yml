@@ -30,10 +30,10 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: malovec/robot-runner:latest,malovec/robot-runner:3.0
+          tags: malovec/robot-runner:latest,malovec/robot-runner:4.0
           build-args: |
-            DHI_PYTHON_RUNTIME_TAG=3.12-alpine3.22
-            DHI_PYTHON_BUILD_TAG=3.12-alpine3.22-dev
+            DHI_PYTHON_RUNTIME_TAG=3.12-alpine3.24
+            DHI_PYTHON_BUILD_TAG=3.12-alpine3.24-dev
 
       - name: Smoke test
         run: docker run --rm -v $(pwd)/tests:/tests malovec/robot-runner:latest -d results /tests/test.robot
