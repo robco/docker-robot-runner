@@ -8,7 +8,7 @@
 
 A hardened, multi-platform Docker image for running Robot Framework test automation across x64 and ARM architectures (including Apple Silicon). This image provides a secure, portable environment for test execution with built-in support for performance testing tools.
 
-## 🌟 Features
+## Features
 
 - **Multi-Architecture Support**: Runs seamlessly on x64, ARM, and Apple Silicon
 - **Hardened Security**: Built on Docker's official hardened Python base image
@@ -19,7 +19,7 @@ A hardened, multi-platform Docker image for running Robot Framework test automat
 - **Flexible Execution**: Run Robot tests or any custom command
 - **Optimized Dependencies**: Pre-cached package installation for faster builds
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Basic Robot Framework Execution
 
@@ -33,7 +33,7 @@ docker run --rm -v $(pwd):/robot malovec/robot-runner:latest tests/suite.robot
 docker run --rm -ti -e CMD=bash malovec/robot-runner:latest
 ```
 
-## 📦 Image Contents
+## Image Contents
 
 ### Pre-installed Packages
 
@@ -48,7 +48,7 @@ docker run --rm -ti -e CMD=bash malovec/robot-runner:latest
 - Node.js/npm packages for modern web testing
 - Alpine Linux system dependencies
 
-## 🛠️ Usage Examples
+## Usage Examples
 
 ### 1. Run Robot Tests with Output Directory
 
@@ -79,7 +79,7 @@ docker run --rm                                                  \
   my_script.py
 ```
 
-## 🔧 Advanced Configuration
+## Advanced Configuration
 
 ### Volume Mounts for Data Persistence
 
@@ -115,7 +115,7 @@ services:
     command: --outputdir /robot/results /robot/tests/smoke.robot
 ```
 
-## 🏗️ Building from Source
+## Building from Source
 
 ### Build for Multiple Architectures
 
@@ -134,7 +134,7 @@ docker build --build-arg DHI_PYTHON_BUILD_TAG=3.11-alpine3.22-dev \
   -t my-robot-runner:custom .
 ```
 
-## 🔒 Security Features
+## Security Features
 
 - Built on Docker's hardened Python base image
 - Non-root user execution support
@@ -142,7 +142,7 @@ docker build --build-arg DHI_PYTHON_BUILD_TAG=3.11-alpine3.22-dev \
 - Regular security updates from upstream bases
 - Python bytecode writing disabled (`PYTHONDONTWRITEBYTECODE=1`)
 
-## 📋 Requirements File Structure
+## Requirements File Structure
 
 The image uses a structured approach for dependencies:
 
@@ -153,13 +153,13 @@ requirements/
 └── python.in   # Python packages
 ```
 
-## 📄 License
+## License
 
 This project is open source. Please check the respective licenses for included tools:
 - Robot Framework: Apache License 2.0
 - Python: Python Software Foundation License
 
-## 🔗 Links
+## Links
 
 - **Docker Hub**: [malovec/robot-runner](https://hub.docker.com/r/malovec/robot-runner)
 - **Robot Framework**: [robotframework.org](https://robotframework.org/)
