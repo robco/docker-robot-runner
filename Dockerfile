@@ -54,6 +54,9 @@ RUN --mount=type=cache,target=/root/.cache/pip                                  
     pip install -U -r /robot/requirements/python.in                                               \
     && pip check
 
+# Install and init RF PlayWright dependences
+RUN rfbrowser init
+
 COPY --chmod=0755 entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
